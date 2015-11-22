@@ -2,7 +2,7 @@ from flask import Flask, request
 import subprocess, thread, os, signal, sys
 app=Flask(__name__)
 
-channel=108.0
+channel=107.5
 proc=None
 
 @app.route("/invoke/<url>")
