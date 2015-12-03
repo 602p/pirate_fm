@@ -1,1 +1,1 @@
-sudo ./server.py
+sudo ./server.py $1

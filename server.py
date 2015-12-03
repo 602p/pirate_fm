@@ -98,6 +98,7 @@ def root():
 if __name__=="__main__":
 	if "cachedata.json" in os.listdir("."):cachedata=load_cachedata()
 	atexit.register(save_cachedata)
-	atexit.register(cleanup)
+	if "nocsd" not in sys.argv:
+		atexit.register(cleanup)
 	app.run(host="0.0.0.0", port=5000, debug=True if len(sys.argv)!=1 else False)
 	
