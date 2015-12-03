@@ -1,6 +1,6 @@
 #!/usr/bin/python
 from flask import Flask, request
-import subprocess, thread, os, signal, sys, json, atexit, threading
+import subprocess, thread, os, signal, sys, json, atexit, threading, util
 app=Flask(__name__)
 
 channel=107.5
@@ -26,6 +26,7 @@ def validate_cache(url):
 	print("Validating Cache of ["+url+"]")
 	if url not in cachedata["valid_caches"]:
 		cachedata["valid_caches"].append(url)
+		cachedata["name_mappings"][url]=util.get_name(url)
 
 def destroy_cache(url):
 	print("Destroying Cache of ["+url+"]")
@@ -69,7 +70,7 @@ def cleanup():
 @app.route("/invoke/<url>")
 def invoke(url):
 	play_url(url)
-	return "Invoked "+("(streaming)" if url+".wav" in os.listdir("cache") else "(cached)")
+	return "Invoked "+("(streaming)" if url not in cachedata["valid_caches"] else "(cached)")+" "+(cachedata["name_mappings"][url] if url in cachedata["name_mappings"] else "")
 
 @app.route("/stop")
 def stop():
@@ -101,5 +102,5 @@ if __name__=="__main__":
 	atexit.register(save_cachedata)
 	if "nocsd" not in sys.argv:
 		atexit.register(cleanup)
-	app.run(host="0.0.0.0", port=5000, debug=True if len(sys.argv)!=1 else False)
+	app.run(host="0.0.0.0", port=5000, debug=True if "debug" in sys.argv else False)
 	
