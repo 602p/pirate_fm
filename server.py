@@ -85,6 +85,11 @@ def set(chan):
 def get():
 	return json.dumps(cachedata)
 
+@app.route("/clean")
+def clean():
+	stop_thread()
+	cleanup()
+
 @app.route("/")
 def root():
 	return "OK"
