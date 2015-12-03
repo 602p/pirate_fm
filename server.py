@@ -11,8 +11,10 @@ cachedata={
 }
 
 def load_cachedata():
-	with open("cachedata.json", 'r') as fd:
-		data=json.load(fd)
+	if "cachedata.json" in os.listdir("."):
+		with open("cachedata.json", 'r') as fd:
+			data=json.load(fd)
+	else: return cachedata
 	return data
 
 def save_cachedata():
