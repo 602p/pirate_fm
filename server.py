@@ -1,3 +1,4 @@
+#!/usr/bin/python
 from flask import Flask, request
 import subprocess, thread, os, signal, sys, json, atexit, threading
 app=Flask(__name__)
@@ -52,10 +53,15 @@ def play_url(url):
 
 def stop_thread():
 	if sub:
-		#os.killpg(sub.pid, signal.SIGTERM)
-		print("PIFM.LOG -> "+open("pifm.log",'r').read())
+		#os.killpg,' signal.SIGTERM)
+		s=open("pifm.log",'r').read()
+		v="exiting" in s and "recv" not in s
+		print("IN ->"+str(v))
 		os.killpg(sub.pid, signal.SIGTERM)
-		if "exiting" in open("pifm.log",'r').read(): validate_cache(sub.url)
+		if v: validate_cache(sub.url)
+
+def cleanup():
+	os.system("sudo python cleanup.py")
 
 @app.route("/invoke/<url>")
 def invoke(url):
@@ -85,5 +91,6 @@ def root():
 if __name__=="__main__":
 	if "cachedata.json" in os.listdir("."):cachedata=load_cachedata()
 	atexit.register(save_cachedata)
+	atexit.register(cleanup)
 	app.run(host="0.0.0.0", port=5000, debug=True if len(sys.argv)!=1 else False)
 	
