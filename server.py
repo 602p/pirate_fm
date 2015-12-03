@@ -7,7 +7,8 @@ channel=107.5
 sub=None
 
 cachedata={
- "valid_caches":[]
+ "valid_caches":[],
+ "name_mappings":{}
 }
 
 def load_cachedata():

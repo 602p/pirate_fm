@@ -11,15 +11,15 @@ base="https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResult
 ret=json.loads(urllib.urlopen(base.replace("[PLAYLIST]",sys.argv[1])).read())
 
 #ret['items'][0]['snippet']["resourceId"]["videoId"]
+server.cachedata=server.load_cachedata()
 
 videos=[]
 
 for element in ret['items']:
 	videos.append(element['snippet']['resourceId']['videoId'])
+	server.cachedata["name_mappings"][videos[-1]]=element['snippet']['title']
 
-server.cachedata=server.load_cachedata()
-
-print "Videos -> "+", ".join(videos)
+print "Videos -> "+", ".join(videos)+" ("+", ".join([server.cachedata["name_mappings"][x] for x in videos])+")"
 if "force" not in sys.argv:
 	if raw_input("OK? (y/N)").upper()!="Y":
 		print "Aborted."
