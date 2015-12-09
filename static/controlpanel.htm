@@ -1,0 +1,14 @@
+<html>
+	<head>
+		<title>Pirate radio control</title>
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+		<script src="apikey.js" type="text/javascript"></script>
+		<script src="main.js" type="text/javascript"></script>
+		<link rel="stylesheet" type="text/css" src="main.css"/>
+	</head>
+	<body onload="checkQSCommands();">
+		<img id="nowplaying_thumb" style="width:200px;height:100px;" />
+		<br/><p id="playing_status" ></p>
+		<br/><button onclick="stopSong();">Stop/Skip song</button><button onclick="isPlayingPlaylist=0;stopSong();">Stop playlist</button>
+	</body>
+</html>
