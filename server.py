@@ -35,9 +35,9 @@ def destroy_cache(url):
 	if url+".wav" in os.listdir("cache"):
 		os.remove("cache/"+url+".wav")
 
-def check_success():
-	t="play_youtube_success" in os.listdir(".")
-	if t: os.remove("play_youtube_success")
+def check_complete(r=1):
+	t="cmd_completed" in os.listdir(".")
+	if t and r: os.remove("cmd_completed")
 	return t
 
 def play_url(url):
@@ -45,7 +45,7 @@ def play_url(url):
 	#validate_cache(url)
 	if url not in cachedata["valid_caches"]:
         	print "Streaming..."
-        	cmd="youtube-dl -f 140 -o - \""+url+"\" | ffmpeg -i - -f wav -acodec pcm_s16le -ac 2 - | tee \"cache/"+url+".wav\" | sudo ./pifm - "+str(channel)+" 44100 stereo > pifm.log"
+        	cmd="youtube-dl -f 140 -o - \""+url+"\" | ffmpeg -i - -f wav -acodec pcm_s16le -ac 2 - | tee \"cache/"+url+".wav\" | sudo ./pifm - "+str(channel)+" 44100 stereo > pifm.log;touch cmd_completed"
 	else:
         	print "Playing from cache..."
         	cmd="sudo ./pifm cache/"+url+".wav "+str(channel)+" 44100 stereo"
@@ -56,6 +56,7 @@ def play_url(url):
 	#validate_cache(url)
 
 def stop_thread():
+	check_complete()
 	if sub:
 		#os.killpg,' signal.SIGTERM)
 		s=open("pifm.log",'r').read()
@@ -86,6 +87,10 @@ def set(chan):
 @app.route("/get")
 def get():
 	return json.dumps(cachedata)
+
+@app.route("/nowplaying")
+def nowplaying():
+	return json.dumps({"playing":"pifm" in os.popen('ps -A').read()})
 
 @app.route("/clean")
 def clean():
