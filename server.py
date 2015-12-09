@@ -90,7 +90,7 @@ def get():
 
 @app.route("/nowplaying")
 def nowplaying():
-	return json.dumps({"playing":check_complete(0)})
+	return json.dumps({"playing":"pifm" in os.system("ps -A")})
 
 @app.route("/clean")
 def clean():
